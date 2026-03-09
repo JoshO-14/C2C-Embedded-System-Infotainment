@@ -92,13 +92,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btnFuelLights">
-          <property name="text">
-           <string>Fuel Light OFF</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QSlider" name="sliderBrightness">
           <property name="maximum">
            <number>100</number>
@@ -119,6 +112,13 @@
       </widget>
       <widget class="QWidget" name="widget">
        <layout class="QVBoxLayout">
+        <item>
+         <widget class="QPushButton" name="btnHorn">
+          <property name="text">
+           <string>Horn</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QSlider" name="sliderVolume">
           <property name="maximum">

@@ -25,25 +25,26 @@ private slots:
     // Lights
     void toggleHeadlights();
     void toggleInteriorLights();
-    void toggleFuelLights();
     void brightnessChanged(int value);
 
     // Audio
     void volumeChanged(int value);
+
+    // Horn
+    void hornPressed();
+    void hornReleased();
 
 private:
     Ui::MainWindow *ui;
 
     bool headlightsOn;
     bool interiorLightsOn;
-    bool fuelLightsOn;
 
     void setupGPIO();
 
     // GPIO control (implement later)
     void setHeadlights(bool state);
     void setInteriorLights(bool state);
-    void setFuelLights(bool state);
     void setBrightness(int level);
     void setVolume(int level);
 };
