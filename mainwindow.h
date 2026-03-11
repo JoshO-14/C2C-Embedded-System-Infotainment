@@ -33,6 +33,7 @@ private slots:
     // Horn
     void hornPressed();
     void hornReleased();
+    void checkHornButton();
 
 private:
     Ui::MainWindow *ui;

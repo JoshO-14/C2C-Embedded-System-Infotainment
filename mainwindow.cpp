@@ -3,6 +3,7 @@
 
 #include <wiringPi.h>
 #include <QDebug>
+#include <QTimer>
 
 
 #define HEADLIGHT_PIN 4
@@ -20,7 +21,16 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    qApp->setStyle("Fusion");
+
     setupGPIO();
+
+    QTimer *hornTimer = new QTimer(this);
+
+    connect(hornTimer, &QTimer::timeout,
+            this, &MainWindow::checkHornButton);
+
+    hornTimer->start(30);
 
     // Navigation
     connect(ui->btnHome, &QPushButton::clicked, this, &MainWindow::showHome);
@@ -98,7 +108,8 @@ void MainWindow::setupGPIO()
 
     pinMode(HEADLIGHT_PIN, OUTPUT);
     pinMode(INTERIOR_PIN, OUTPUT);
-    pinMode(HORN_BUTTON_PIN, OUTPUT);
+    pinMode(HORN_BUTTON_PIN, INPUT);
+    pullUpDnControl(HORN_BUTTON_PIN, PUD_DOWN);
 
     pinMode(BRIGHT_LED1, OUTPUT);
     pinMode(BRIGHT_LED2, OUTPUT);
@@ -120,13 +131,34 @@ void MainWindow::setInteriorLights(bool state)
 
 void MainWindow::hornPressed()
 {
-    digitalWrite(HORN_BUTTON_PIN, HIGH);
+    ui->btnHorn->setStyleSheet("background-color: red;");
     qDebug() << "HORN!";
 }
 
 void MainWindow::hornReleased()
 {
-    digitalWrite(HORN_BUTTON_PIN, LOW);
+    ui->btnHorn->setStyleSheet("");
+}
+
+void MainWindow::checkHornButton()
+{
+    static bool lastState = LOW;
+    bool currentState = digitalRead(HORN_BUTTON_PIN);
+
+    if (currentState == HIGH && lastState == LOW)
+    {
+        ui->btnHorn->setStyleSheet("background-color: red; color: white;");
+        ui->btnHorn->update();
+        qDebug() << "HORN!";
+    }
+
+    if (currentState == LOW && lastState == HIGH)
+    {
+        ui->btnHorn->setStyleSheet("");
+        ui->btnHorn->update();
+    }
+
+    lastState = currentState;
 }
 
 void MainWindow::setBrightness(int level)
